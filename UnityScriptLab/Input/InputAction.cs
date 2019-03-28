@@ -11,8 +11,6 @@ namespace UnityScriptLab {
 
             static Dictionary<string, InputAction> actions = new Dictionary<string, InputAction>();
 
-            string name;
-
             public static InputAction Get(string name) {
                 if (!actions.ContainsKey(name)) {
                     actions[name] = new InputAction(name);
@@ -20,8 +18,20 @@ namespace UnityScriptLab {
                 return actions[name];
             }
 
+            public event TriggerEvent Triggered;
+
+            string name;
+
+            List<InputControl> bindings;
+
             private InputAction(string name) {
                 this.name = name;
+                this.bindings = new List<InputControl>();
+            }
+
+            public void Bind(InputControl control) {
+                bindings.Add(control);
+                control.Triggered += () => Triggered();
             }
 
         }

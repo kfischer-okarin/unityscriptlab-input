@@ -1,0 +1,12 @@
+{
+    "name": "com.nostalgialab.unityscriptlab.input",
+    "displayName": "Unity Script Lab - Input",
+    "version": "0.0.1",
+    "unity": "2018.1",
+    "description": "Input Actions",
+    "keywords": [
+        "unity",
+        "input"
+    ],
+    "category": "Unity"
+}

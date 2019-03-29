@@ -1,20 +1,19 @@
 ﻿using System;
 
+using UnityEngine;
+
 namespace UnityScriptLab {
     namespace Input {
         public class Button : InputControl {
-            public static Button ButtonPressed(string buttonName) {
-                return new Button(buttonName, State.Pressed);
-            }
-
             enum State {
                 Pressed,
+                Released,
             }
             string buttonName;
             State buttonState;
-            private Button(string buttonName, State buttonState) {
+            public Button(string buttonName) {
                 this.buttonName = buttonName;
-                this.buttonState = buttonState;
+                this.buttonState = State.Pressed;
             }
 
             public event Action Triggered;

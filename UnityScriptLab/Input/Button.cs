@@ -6,17 +6,28 @@ namespace UnityScriptLab {
     namespace Input {
         public class Button : InputControl {
             KeyCode key;
+            Func<bool> TriggerCondition;
             public Button(KeyCode key) {
                 this.key = key;
-                Pressed();
+                this.TriggerCondition = () => false;
             }
 
-            public Button Pressed() {
-                this.TriggerCondition = () => UnityEngine.Input.GetKeyDown(key);
-                return this;
+            public Button Press {
+                get {
+                    this.TriggerCondition = () => UnityEngine.Input.GetKeyDown(key);
+                    return this;
+                }
             }
-            public Button Released() {
-                this.TriggerCondition = () => UnityEngine.Input.GetKeyUp(key);
+
+            public Button Release {
+                get {
+                    this.TriggerCondition = () => UnityEngine.Input.GetKeyUp(key);
+                    return this;
+                }
+            }
+
+            public Button And(Button other) {
+                this.TriggerCondition = () => UnityEngine.Input.GetKey(key) && other.TriggerCondition();
                 return this;
             }
 
@@ -27,8 +38,6 @@ namespace UnityScriptLab {
                     Triggered?.Invoke();
                 }
             }
-
-            Func<bool> TriggerCondition;
         }
     }
 }

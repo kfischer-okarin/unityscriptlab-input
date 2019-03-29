@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace UnityScriptLab {
     namespace Input {
+        public delegate void InputActionEvent(InputControl trigger);
         /// <summary>
         /// Input Action.
         /// </summary>
@@ -18,7 +19,7 @@ namespace UnityScriptLab {
                 return actions[name];
             }
 
-            public event TriggerEvent Triggered;
+            public event InputActionEvent Triggered;
 
             string name;
 
@@ -31,7 +32,7 @@ namespace UnityScriptLab {
 
             public void Bind(InputControl control) {
                 bindings.Add(control);
-                control.Triggered += () => Triggered();
+                control.Triggered += () => Triggered(control);
             }
 
         }

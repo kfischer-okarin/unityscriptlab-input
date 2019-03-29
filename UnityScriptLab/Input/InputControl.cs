@@ -2,10 +2,10 @@
 
 namespace UnityScriptLab {
     namespace Input {
-        public delegate void TriggerEvent();
+        public delegate void InputControlEvent();
 
         public interface InputControl {
-            event TriggerEvent Triggered;
+            event InputControlEvent Triggered;
 
             void Update();
         }

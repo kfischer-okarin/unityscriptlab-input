@@ -13,19 +13,34 @@ namespace UnityScriptLab {
             State buttonState;
             public Button(KeyCode key) {
                 this.key = key;
+                Pressed();
+            }
+
+            public Button Pressed() {
                 this.buttonState = State.Pressed;
+                return this;
+            }
+            public Button Released() {
+                this.buttonState = State.Released;
+                return this;
             }
 
             public event Action Triggered;
 
             public void Update() {
+                if (WasTriggered()) {
+                    Triggered?.Invoke();
+                }
+            }
+
+            bool WasTriggered() {
                 switch (buttonState) {
                     case State.Pressed:
-                        if (UnityEngine.Input.GetKeyDown(key)) {
-                            Triggered?.Invoke();
-                        }
-                        break;
+                        return UnityEngine.Input.GetKeyDown(key);
+                    case State.Released:
+                        return UnityEngine.Input.GetKeyUp(key);
                 }
+                return false;
             }
         }
     }

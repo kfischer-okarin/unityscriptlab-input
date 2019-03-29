@@ -9,10 +9,10 @@ namespace UnityScriptLab {
                 Pressed,
                 Released,
             }
-            string buttonName;
+            KeyCode key;
             State buttonState;
-            public Button(string buttonName) {
-                this.buttonName = buttonName;
+            public Button(KeyCode key) {
+                this.key = key;
                 this.buttonState = State.Pressed;
             }
 
@@ -21,7 +21,7 @@ namespace UnityScriptLab {
             public void Update() {
                 switch (buttonState) {
                     case State.Pressed:
-                        if (UnityEngine.Input.GetButtonDown(buttonName)) {
+                        if (UnityEngine.Input.GetKeyDown(key)) {
                             Triggered?.Invoke();
                         }
                         break;

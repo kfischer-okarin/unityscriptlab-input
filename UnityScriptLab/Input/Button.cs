@@ -1,4 +1,6 @@
-﻿namespace UnityScriptLab {
+﻿using System;
+
+namespace UnityScriptLab {
     namespace Input {
         public class Button : InputControl {
             string buttonName;
@@ -6,7 +8,7 @@
                 this.buttonName = buttonName;
             }
 
-            public event InputControlEvent Triggered;
+            public event Action Triggered;
 
             public void Update() {
                 if (UnityEngine.Input.GetButtonDown(buttonName)) {

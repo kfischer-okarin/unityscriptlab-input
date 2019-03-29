@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
 namespace UnityScriptLab {
     namespace Input {
-        public delegate void InputActionEvent(InputControl trigger);
         /// <summary>
         /// Input Action.
         /// </summary>
@@ -19,7 +19,7 @@ namespace UnityScriptLab {
                 return actions[name];
             }
 
-            public event InputActionEvent Triggered;
+            public event Action<InputControl> Triggered;
 
             string name;
 

@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace UnityScriptLab {
     namespace Input {
         public delegate void InputControlEvent();
 
         public interface InputControl {
-            event InputControlEvent Triggered;
+            event Action Triggered;
 
             void Update();
         }

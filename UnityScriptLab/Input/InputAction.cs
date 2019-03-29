@@ -32,7 +32,7 @@ namespace UnityScriptLab {
 
             public void Bind(InputControl control) {
                 bindings.Add(control);
-                control.Triggered += () => Triggered(control);
+                control.Triggered += () => Triggered?.Invoke(control);
             }
 
         }

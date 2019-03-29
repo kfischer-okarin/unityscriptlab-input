@@ -12,7 +12,7 @@ namespace UnityScriptLab {
 
             public void Update() {
                 if (UnityEngine.Input.GetButtonDown(buttonName)) {
-                    Triggered();
+                    Triggered?.Invoke();
                 }
             }
         }

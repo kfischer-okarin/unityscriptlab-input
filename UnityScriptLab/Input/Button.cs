@@ -5,43 +5,30 @@ using UnityEngine;
 namespace UnityScriptLab {
     namespace Input {
         public class Button : InputControl {
-            enum State {
-                Pressed,
-                Released,
-            }
             KeyCode key;
-            State buttonState;
             public Button(KeyCode key) {
                 this.key = key;
                 Pressed();
             }
 
             public Button Pressed() {
-                this.buttonState = State.Pressed;
+                this.TriggerCondition = () => UnityEngine.Input.GetKeyDown(key);
                 return this;
             }
             public Button Released() {
-                this.buttonState = State.Released;
+                this.TriggerCondition = () => UnityEngine.Input.GetKeyUp(key);
                 return this;
             }
 
             public event Action Triggered;
 
             public void Update() {
-                if (WasTriggered()) {
+                if (TriggerCondition()) {
                     Triggered?.Invoke();
                 }
             }
 
-            bool WasTriggered() {
-                switch (buttonState) {
-                    case State.Pressed:
-                        return UnityEngine.Input.GetKeyDown(key);
-                    case State.Released:
-                        return UnityEngine.Input.GetKeyUp(key);
-                }
-                return false;
-            }
+            Func<bool> TriggerCondition;
         }
     }
 }

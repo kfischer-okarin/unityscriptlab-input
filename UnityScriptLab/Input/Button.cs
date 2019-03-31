@@ -26,8 +26,16 @@ namespace UnityScriptLab {
                 }
             }
 
+            public Button Hold {
+                get {
+                    this.TriggerCondition = () => UnityEngine.Input.GetKey(key);
+                    return this;
+                }
+            }
+
             public Button And(Button other) {
-                this.TriggerCondition = () => UnityEngine.Input.GetKey(key) && other.TriggerCondition();
+                var currentCondition = this.TriggerCondition;
+                this.TriggerCondition = () => currentCondition() && other.TriggerCondition();
                 return this;
             }
 

@@ -41,7 +41,7 @@ namespace UnityScriptLab {
 
             public event Action Triggered;
 
-            public void Update() {
+            public void HandleInput() {
                 if (TriggerCondition()) {
                     Triggered?.Invoke();
                 }

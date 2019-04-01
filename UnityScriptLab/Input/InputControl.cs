@@ -7,7 +7,7 @@ namespace UnityScriptLab {
         public interface InputControl {
             event Action Triggered;
 
-            void Update();
+            void HandleInput();
         }
 
     }

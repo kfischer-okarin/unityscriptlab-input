@@ -3,7 +3,7 @@
 namespace UnityScriptLab {
     namespace Input {
         public static class Controls {
-            public static Button Button(KeyCode key) => new Button(key).Hold;
+            public static Key Key(KeyCode key) => new Key(key).Hold;
         }
     }
 }

@@ -19,18 +19,18 @@ namespace UnityScriptLab {
                 return actions[name];
             }
 
-            public event Action<InputEvent> Triggered;
+            public event Action<Event.InputEvent> Triggered;
 
             string name;
 
-            List<InputEvent> bindings;
+            List<Event.InputEvent> bindings;
 
             private InputAction(string name) {
                 this.name = name;
-                this.bindings = new List<InputEvent>();
+                this.bindings = new List<Event.InputEvent>();
             }
 
-            public void Bind(InputEvent control) {
+            public void Bind(Event.InputEvent control) {
                 bindings.Add(control);
                 control.Triggered += () => Triggered?.Invoke(control);
             }

@@ -9,6 +9,12 @@ namespace UnityScriptLab {
             public class InputEvent {
                 static Dictionary<string, InputEvent> boundEvents = new Dictionary<string, InputEvent>();
 
+                public static IReadOnlyCollection<InputEvent> BoundEvents {
+                    get {
+                        return boundEvents.Values;
+                    }
+                }
+
                 int bindingCount = 0;
                 protected event Action triggered;
                 protected event Action stopped;

@@ -8,5 +8,8 @@
         "unity",
         "input"
     ],
-    "category": "Unity"
+    "category": "Unity",
+    "dependencies": {
+        "com.nsub.nsubstitute": "4.0.1"
+    }
 }

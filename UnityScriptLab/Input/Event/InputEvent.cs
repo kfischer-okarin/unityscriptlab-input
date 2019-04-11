@@ -15,6 +15,10 @@ namespace UnityScriptLab {
                     }
                 }
 
+                public static void ResetBindings() {
+                    boundEvents.Clear();
+                }
+
                 int bindingCount = 0;
                 protected event Action triggered;
                 protected event Action stopped;

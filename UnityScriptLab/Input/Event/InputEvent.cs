@@ -38,21 +38,26 @@ namespace UnityScriptLab {
 
                 string name;
                 bool active;
-                Func<bool> triggerCondition;
-                Func<bool> stopCondition;
+                Func<InputSystem, bool> triggerCondition;
+                Func<InputSystem, bool> stopCondition;
+                InputSystem input = new UnityInputSystem();
 
-                public InputEvent(string name, Func<bool> triggerCondition, Func<bool> stopCondition) {
+                public InputEvent(string name, Func<InputSystem, bool> triggerCondition, Func<InputSystem, bool> stopCondition) {
                     this.name = name;
                     this.triggerCondition = triggerCondition;
                     this.stopCondition = stopCondition;
                 }
-                public InputEvent(string name, Func<bool> triggerCondition) : this(name, triggerCondition, () => true) { }
+                public InputEvent(string name, Func<InputSystem, bool> triggerCondition) : this(name, triggerCondition, input => true) { }
+
+                public void SetInputSystem(InputSystem input) {
+                    this.input = input;
+                }
 
                 public void HandleInput() {
-                    if (!active && triggerCondition()) {
+                    if (!active && triggerCondition(input)) {
                         triggered?.Invoke();
                         active = true;
-                    } else if (active && stopCondition()) {
+                    } else if (active && stopCondition(input)) {
                         stopped?.Invoke();
                         active = false;
                     }
@@ -60,8 +65,8 @@ namespace UnityScriptLab {
 
                 public InputEvent And(InputEvent other) {
                     return new InputEvent($"{this.name}+{other.name}",
-                        () => this.triggerCondition() && other.triggerCondition(),
-                        () => this.stopCondition() || other.stopCondition());
+                        input => this.triggerCondition(input) && other.triggerCondition(input),
+                        input => this.stopCondition(input) || other.stopCondition(input));
                 }
 
                 public override string ToString() => name;

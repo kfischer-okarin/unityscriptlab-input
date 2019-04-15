@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace UnityScriptLab {
   namespace Input {
+    /// <summary>
+    /// Wrapper around UnityEngine.Input.
+    /// </summary>
     public class UnityInputSystem : InputSystem {
       public UnityInputSystem() { }
 

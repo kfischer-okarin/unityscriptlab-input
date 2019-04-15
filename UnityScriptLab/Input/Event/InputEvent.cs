@@ -6,9 +6,15 @@ using UnityEngine;
 namespace UnityScriptLab {
     namespace Input {
         namespace Event {
+            /// <summary>
+            /// Event triggered by the input system, to which handlers can be subscribed.
+            /// </summary>
             public class InputEvent {
                 static Dictionary<string, InputEvent> boundEvents = new Dictionary<string, InputEvent>();
 
+                /// <summary>
+                /// All events that are currently bound to a handler.
+                /// </summary>
                 public static IReadOnlyCollection<InputEvent> BoundEvents {
                     get {
                         return boundEvents.Values;
@@ -23,6 +29,9 @@ namespace UnityScriptLab {
                 protected event Action triggered;
                 protected event Action stopped;
 
+                /// <summary>
+                /// Triggered every frame the event is happening.
+                /// </summary>
                 public event Action Triggered {
                     add {
                         Bind(ev => ev.triggered += value);
@@ -31,6 +40,10 @@ namespace UnityScriptLab {
                         Unbind(ev => ev.triggered -= value);
                     }
                 }
+
+                /// <summary>
+                /// Triggered on the frame the event ends.
+                /// </summary>
                 public event Action Stopped {
                     add {
                         Bind(ev => ev.stopped += value);
@@ -46,13 +59,22 @@ namespace UnityScriptLab {
                 Func<InputSystem, bool> stopCondition;
                 InputSystem input = new UnityInputSystem();
 
+                /// <param name="name">Unique name of the event</param>
+                /// <param name="triggerCondition">Condition for the event triggering.</param>
+                /// <param name="stopCondition">Condition for the event stopping.</param>
                 public InputEvent(string name, Func<InputSystem, bool> triggerCondition, Func<InputSystem, bool> stopCondition) {
                     this.name = name;
                     this.triggerCondition = triggerCondition;
                     this.stopCondition = stopCondition;
                 }
+
+                /// <param name="name">Unique name of the event</param>
+                /// <param name="triggerCondition">Condition for the event triggering.</param>
                 public InputEvent(string name, Func<InputSystem, bool> triggerCondition) : this(name, triggerCondition, input => true) { }
 
+                /// <summary>
+                /// Set the InputSystem which is queried. Use to set stub input.
+                /// </summary>
                 public void SetInputSystem(InputSystem input) {
                     this.input = input;
                 }
@@ -67,6 +89,9 @@ namespace UnityScriptLab {
                     }
                 }
 
+                /// <summary>
+                /// Returns a combined event triggering when both of the events are triggering at the same time.
+                /// </summary>
                 public InputEvent And(InputEvent other) {
                     return new InputEvent($"{this.name}+{other.name}",
                         input => this.triggerCondition(input) && other.triggerCondition(input),

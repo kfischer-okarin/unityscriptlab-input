@@ -19,8 +19,8 @@ namespace Tests {
             public void BoundEventListTest() {
                 InputEvent.ResetBindings();
 
-                InputTrigger ev1 = Key.Pressed(KeyCode.Space);
-                InputTrigger ev2 = Key.Pressed(KeyCode.Return);
+                InputTrigger ev1 = new InputTrigger("test", default);
+                InputTrigger ev2 = new InputTrigger("test2", default);
                 Action action = () => { };
                 Action secondAction = () => { };
 

@@ -9,6 +9,8 @@ namespace UnityScriptLab {
       bool GetKeyDown(KeyCode key);
       bool GetKeyUp(KeyCode key);
       bool GetKey(KeyCode key);
+      float GetAxis(string name);
+      float GetAxisRaw(string name);
     }
   }
 }

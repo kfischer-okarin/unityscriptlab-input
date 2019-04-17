@@ -5,7 +5,6 @@ using UnityEngine;
 namespace UnityScriptLab {
     namespace Input {
         namespace Event {
-
             public static class Key {
                 /// <summary>
                 /// InputTrigger: Key was pressed.

@@ -16,9 +16,9 @@ namespace Tests {
             bool triggered;
             bool stopped;
             InputSystem input;
-            InputEvent ev;
+            InputTrigger ev;
 
-            void Prepare(InputEvent eventToPrepare) {
+            void Prepare(InputTrigger eventToPrepare) {
                 InputEvent.ResetBindings();
                 ev = eventToPrepare;
                 ev.Triggered += () => triggered = true;

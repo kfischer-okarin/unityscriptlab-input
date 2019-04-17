@@ -30,7 +30,7 @@ namespace UnityScriptLab {
                 this.bindings = new List<Event.InputEvent>();
             }
 
-            public void Bind(Event.InputEvent control) {
+            public void Bind(Event.InputTrigger control) {
                 bindings.Add(control);
                 control.Triggered += () => Triggered?.Invoke(control);
             }

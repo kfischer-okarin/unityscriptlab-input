@@ -12,7 +12,7 @@ using UnityScriptLab.Input.Event;
 
 namespace Tests {
     namespace Event {
-        public class ValueOfTests {
+        public class InputValueTests {
             float value;
             InputSystem input;
             InputValue val;

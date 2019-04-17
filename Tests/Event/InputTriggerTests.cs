@@ -12,18 +12,22 @@ using UnityScriptLab.Input.Event;
 
 namespace Tests {
     namespace Event {
-        public class KeyTests {
+        public class InputTriggerTests {
             bool triggered;
             bool stopped;
             InputSystem input;
             InputTrigger ev;
 
-            void Prepare(InputTrigger eventToPrepare) {
+            [SetUp]
+            public void Reset() {
                 InputEvent.ResetBindings();
+                input = Substitute.For<InputSystem>();
+            }
+
+            void Prepare(InputTrigger eventToPrepare) {
                 ev = eventToPrepare;
                 ev.Triggered += () => triggered = true;
                 ev.Stopped += () => stopped = true;
-                input = Substitute.For<InputSystem>();
                 ev.SetInputSystem(input);
             }
 
@@ -87,6 +91,43 @@ namespace Tests {
 
                 SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(true));
                 AssertEventWasStopped();
+            }
+
+            [Test]
+            public void AndTest() {
+                bool aTriggered = false;
+                bool bTriggered = false;
+                InputTrigger triggerA = new InputTrigger("A", _ => aTriggered);
+                InputTrigger triggerB = new InputTrigger("B", _ => bTriggered);
+                InputTrigger combined = triggerA.And(triggerB);
+
+                Assert.That(combined.ToString(), Is.EqualTo("A+B"));
+                Prepare(combined);
+
+                aTriggered = true;
+                bTriggered = false;
+                WaitFrame();
+                AssertNothingHappened();
+
+                aTriggered = false;
+                bTriggered = true;
+                WaitFrame();
+                AssertNothingHappened();
+
+                aTriggered = true;
+                bTriggered = true;
+                WaitFrame();
+                AssertEventWasTriggered();
+
+                aTriggered = false;
+                bTriggered = true;
+                WaitFrame();
+                AssertEventWasStopped();
+
+                aTriggered = false;
+                bTriggered = false;
+                WaitFrame();
+                AssertNothingHappened();
             }
         }
     }

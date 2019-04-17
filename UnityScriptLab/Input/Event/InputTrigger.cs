@@ -10,8 +10,8 @@ namespace UnityScriptLab {
             /// Event triggered by the input system, to which handlers can be subscribed.
             /// </summary>
             public class InputTrigger : InputEvent {
-                protected event Action triggered;
-                protected event Action stopped;
+                event Action triggered;
+                event Action stopped;
 
                 /// <summary>
                 /// Triggered every frame the event is happening.
@@ -54,10 +54,10 @@ namespace UnityScriptLab {
                 public InputTrigger(string name, Func<InputSystem, bool> triggerCondition) : this(name, triggerCondition, input => true) { }
 
                 public override void HandleInput() {
-                    if (!active && triggerCondition(input)) {
+                    if (!active && triggerCondition(this.Input)) {
                         triggered?.Invoke();
                         active = true;
-                    } else if (active && stopCondition(input)) {
+                    } else if (active && stopCondition(this.Input)) {
                         stopped?.Invoke();
                         active = false;
                     }

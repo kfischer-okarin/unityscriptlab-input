@@ -27,12 +27,15 @@ namespace UnityScriptLab {
 
                 int bindingCount = 0;
                 protected string name;
-                protected InputSystem input = new UnityInputSystem();
+                InputSystem input = new UnityInputSystem();
+                protected InputSystem Input { get { return input; } }
 
                 /// <param name="name">Unique name of the event</param>
                 protected InputEvent(string name) {
                     this.name = name;
                 }
+
+                public override string ToString() => name;
 
                 /// <summary>
                 /// Set the InputSystem which is queried. Use to set stub input.
@@ -41,9 +44,10 @@ namespace UnityScriptLab {
                     this.input = input;
                 }
 
+                /// <summary>
+                /// Read values from the InputSystem and trigger events if necessary.
+                /// </summary>
                 public abstract void HandleInput();
-
-                public override string ToString() => name;
 
                 protected void Bind<T>(Action<T> doBind) where T : InputEvent {
                     if (!boundEvents.ContainsKey(name)) {
@@ -54,7 +58,7 @@ namespace UnityScriptLab {
                     target.bindingCount += 1;
                 }
 
-                protected void Unbind<T>(Action<T> doUnbind) where T : InputEvent  {
+                protected void Unbind<T>(Action<T> doUnbind) where T : InputEvent {
                     if (boundEvents.ContainsKey(name)) {
                         InputEvent target = boundEvents[name];
                         doUnbind((T) target);

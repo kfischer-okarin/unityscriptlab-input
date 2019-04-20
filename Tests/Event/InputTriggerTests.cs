@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using NSubstitute;
 
@@ -43,18 +43,18 @@ namespace Tests {
             }
 
             void AssertEventWasTriggered() {
-                Assert.That(triggered, Is.True);
-                Assert.That(stopped, Is.False);
+                Assert.That(triggered, Is.True, "But wasn't triggered");
+                Assert.That(stopped, Is.False, "But was stopped");
             }
 
             void AssertEventWasStopped() {
-                Assert.That(triggered, Is.False);
-                Assert.That(stopped, Is.True);
+                Assert.That(triggered, Is.False, "But was triggered");
+                Assert.That(stopped, Is.True, "But wasn't stopped");
             }
 
             void AssertNothingHappened() {
-                Assert.That(triggered, Is.False);
-                Assert.That(stopped, Is.False);
+                Assert.That(triggered, Is.False, "But was triggered");
+                Assert.That(stopped, Is.False, "But was stopped");
             }
 
             [Test]

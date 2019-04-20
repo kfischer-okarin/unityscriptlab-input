@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 using NSubstitute;
 
@@ -170,6 +170,50 @@ namespace Tests {
                 returnedValue = 2.5f;
                 WaitFrame();
                 AssertEventWasStopped();
+            }
+
+            [Test]
+            public void ValueSurpassedTest() {
+                float returnedValue = 0;
+                InputValue value = new InputValue("value", _ => returnedValue);
+                value.HandleInput();
+                Prepare(value.Surpassed(2.0f));
+
+                WaitFrame();
+                AssertNothingHappened();
+
+                returnedValue = 2.5f;
+                WaitFrame();
+                AssertEventWasTriggered();
+
+                WaitFrame();
+                AssertEventWasStopped();
+
+                returnedValue = 1.5f;
+                WaitFrame();
+                AssertNothingHappened();
+            }
+
+            [Test]
+            public void ValueFellBelowTest() {
+                float returnedValue = 3.0f;
+                InputValue value = new InputValue("value", _ => returnedValue);
+                value.HandleInput();
+                Prepare(value.FellBelow(2.0f));
+
+                WaitFrame();
+                AssertNothingHappened();
+
+                returnedValue = 1.5f;
+                WaitFrame();
+                AssertEventWasTriggered();
+
+                WaitFrame();
+                AssertEventWasStopped();
+
+                returnedValue = 2.5f;
+                WaitFrame();
+                AssertNothingHappened();
             }
         }
     }

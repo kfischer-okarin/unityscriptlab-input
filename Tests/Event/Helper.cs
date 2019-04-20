@@ -49,5 +49,41 @@ namespace Tests {
         Assert.That(stopped, Is.False, "But was stopped");
       }
     }
+
+    public class InputValueSpy {
+      InputValue val;
+      float newValue;
+      bool updated;
+      InputSystem input;
+
+      public InputValueSpy(InputValue val) {
+        this.val = val;
+        input = Substitute.For<InputSystem>();
+        val.Updated += v => {
+          updated = true;
+          newValue = v;
+        };
+        val.SetInputSystem(input);
+      }
+
+      public void SimulateInput(Action<InputSystem> action) {
+        updated = false;
+        action?.Invoke(input);
+        val.HandleInput();
+      }
+
+      public void WaitFrame() {
+        SimulateInput(null);
+      }
+
+      public void AssertWasUpdatedTo(float value) {
+        Assert.That(updated, Is.True, "But wasn't updated");
+        Assert.That(newValue, Is.EqualTo(value), $"But was updated to {newValue}");
+      }
+
+      public void AssertNothingHappened() {
+        Assert.That(updated, Is.False, "But was updated");
+      }
+    }
   }
 }

@@ -1,70 +1,47 @@
-﻿using System;
-
-using NSubstitute;
+﻿using NSubstitute;
 
 using NUnit.Framework;
 
-using UnityEngine;
-using UnityEngine.TestTools;
+using Tests.Helper;
 
-using UnityScriptLab.Input;
 using UnityScriptLab.Input.Event;
 
 namespace Tests {
     namespace Event {
         public class InputValueTests {
-            float value;
-            InputSystem input;
-            InputValue val;
-
-            void Prepare(InputValue valueToPrepare) {
+            [SetUp]
+            public void Reset() {
                 InputEvent.ResetBindings();
-                val = valueToPrepare;
-                val.Updated += v => value = v;
-                input = Substitute.For<InputSystem>();
-                val.SetInputSystem(input);
-            }
-
-            void SimulateInput(Action<InputSystem> action) {
-                value = 0;
-                action?.Invoke(input);
-                val.HandleInput();
-            }
-
-            void WaitFrame() {
-                SimulateInput(null);
-            }
-
-            void AssertOnlyNotifiesWhenChanging(Func<InputSystem, float>  valueGetter) {
-                SimulateInput(i => valueGetter(i).Returns(2.0f));
-                Assert.That(value, Is.EqualTo(2.0f));
-
-                SimulateInput(i => valueGetter(i).Returns(2.0f));
-                Assert.That(value, Is.EqualTo(0.0f));
-
-                SimulateInput(i => valueGetter(i).Returns(3.0f));
-                Assert.That(value, Is.EqualTo(3.0f));
             }
 
             [Test]
             public void AxisTest() {
-                Prepare(ValueOf.Axis("Horizontal"));
+                InputValueSpy spy = new InputValueSpy(ValueOf.Axis("Horizontal"));
 
-                AssertOnlyNotifiesWhenChanging(i => i.GetAxis("Horizontal"));
+                spy.SimulateInput(i => i.GetAxis("Horizontal").Returns(2.0f));
+                spy.AssertWasUpdatedTo(2.0f);
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
             }
 
             [Test]
             public void RawAxisTest() {
-                Prepare(ValueOf.RawAxis("Horizontal"));
+                InputValueSpy spy = new InputValueSpy(ValueOf.RawAxis("Horizontal"));
 
-                AssertOnlyNotifiesWhenChanging(i => i.GetAxisRaw("Horizontal"));
+                spy.SimulateInput(i => i.GetAxisRaw("Horizontal").Returns(2.0f));
+                spy.AssertWasUpdatedTo(2.0f);
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
             }
 
             [Test]
             public void WithoutSignTest() {
-                Prepare(new InputValue("value", _ => -2.0f).WithoutSign);
-                WaitFrame();
-                Assert.That(value, Is.EqualTo(2.0f));
+                InputValueSpy spy = new InputValueSpy(new InputValue("value", _ => -2.0f).WithoutSign);
+
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(2.0f);
             }
         }
     }

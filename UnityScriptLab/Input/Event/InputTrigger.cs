@@ -54,12 +54,16 @@ namespace UnityScriptLab {
                 public InputTrigger(string name, Func<InputSystem, bool> triggerCondition) : this(name, triggerCondition, input => !triggerCondition(input)) { }
 
                 public override void HandleInput() {
-                    if (!active && triggerCondition(this.Input)) {
+                    if (active) {
+                        if (stopCondition(this.Input)) {
+                            active = false;
+                            stopped?.Invoke();
+                            return;
+                        }
                         triggered?.Invoke();
+                    } else if (triggerCondition(this.Input)) {
                         active = true;
-                    } else if (active && stopCondition(this.Input)) {
-                        stopped?.Invoke();
-                        active = false;
+                        triggered?.Invoke();
                     }
                 }
 

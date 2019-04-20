@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using NSubstitute;
 
@@ -87,7 +87,7 @@ namespace Tests {
                 AssertEventWasTriggered();
 
                 WaitFrame();
-                AssertNothingHappened();
+                AssertEventWasTriggered();
 
                 SimulateInput(i => i.GetKey(KeyCode.Space).Returns(false));
                 AssertEventWasStopped();

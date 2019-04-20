@@ -59,6 +59,13 @@ namespace Tests {
 
                 AssertOnlyNotifiesWhenChanging(i => i.GetAxisRaw("Horizontal"));
             }
+
+            [Test]
+            public void WithoutSignTest() {
+                Prepare(new InputValue("value", _ => -2.0f).WithoutSign);
+                WaitFrame();
+                Assert.That(value, Is.EqualTo(2.0f));
+            }
         }
     }
 }

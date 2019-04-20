@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -51,6 +51,12 @@ namespace UnityScriptLab {
                     if (HasNewValue) {
                         value = NewValue;
                         updated?.Invoke(value);
+                    }
+                }
+
+                public InputValue WithoutSign {
+                    get {
+                        return new InputValue($"{name}-WithoutSign", input => Mathf.Abs(getValue(input)));
                     }
                 }
             }

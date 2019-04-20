@@ -1,11 +1,10 @@
-﻿using System;
-
-using NSubstitute;
+﻿using NSubstitute;
 
 using NUnit.Framework;
 
+using Tests.Helper;
+
 using UnityEngine;
-using UnityEngine.TestTools;
 
 using UnityScriptLab.Input;
 using UnityScriptLab.Input.Event;
@@ -13,84 +12,45 @@ using UnityScriptLab.Input.Event;
 namespace Tests {
     namespace Event {
         public class InputTriggerTests {
-            bool triggered;
-            bool stopped;
-            InputSystem input;
-            InputTrigger ev;
-
             [SetUp]
             public void Reset() {
                 InputEvent.ResetBindings();
-                input = Substitute.For<InputSystem>();
-            }
-
-            void Prepare(InputTrigger eventToPrepare) {
-                ev = eventToPrepare;
-                ev.Triggered += () => triggered = true;
-                ev.Stopped += () => stopped = true;
-                ev.SetInputSystem(input);
-            }
-
-            void SimulateInput(Action<InputSystem> action) {
-                triggered = false;
-                stopped = false;
-                action?.Invoke(input);
-                ev.HandleInput();
-            }
-
-            void WaitFrame() {
-                SimulateInput(null);
-            }
-
-            void AssertEventWasTriggered() {
-                Assert.That(triggered, Is.True, "But wasn't triggered");
-                Assert.That(stopped, Is.False, "But was stopped");
-            }
-
-            void AssertEventWasStopped() {
-                Assert.That(triggered, Is.False, "But was triggered");
-                Assert.That(stopped, Is.True, "But wasn't stopped");
-            }
-
-            void AssertNothingHappened() {
-                Assert.That(triggered, Is.False, "But was triggered");
-                Assert.That(stopped, Is.False, "But was stopped");
             }
 
             [Test]
             public void KeyPressedTest() {
-                Prepare(Key.Pressed(KeyCode.Space));
+                InputTriggerSpy spy = new InputTriggerSpy(Key.Pressed(KeyCode.Space));
 
-                SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(true));
-                AssertEventWasTriggered();
+                spy.SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(true));
+                spy.AssertWasTriggered();
 
-                SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(false));
-                AssertEventWasStopped();
+                spy.SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(false));
+                spy.AssertWasStopped();
             }
 
             [Test]
             public void KeyReleasedTest() {
-                Prepare(Key.Released(KeyCode.Space));
+                InputTriggerSpy spy = new InputTriggerSpy(Key.Released(KeyCode.Space));
 
-                SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(true));
-                AssertEventWasTriggered();
+                spy.SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(true));
+                spy.AssertWasTriggered();
 
-                SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(false));
-                AssertEventWasStopped();
+                spy.SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(false));
+                spy.AssertWasStopped();
             }
 
             [Test]
             public void KeyHeldTest() {
-                Prepare(Key.Held(KeyCode.Space));
+                InputTriggerSpy spy = new InputTriggerSpy(Key.Held(KeyCode.Space));
 
-                SimulateInput(i => i.GetKey(KeyCode.Space).Returns(true));
-                AssertEventWasTriggered();
+                spy.SimulateInput(i => i.GetKey(KeyCode.Space).Returns(true));
+                spy.AssertWasTriggered();
 
-                WaitFrame();
-                AssertEventWasTriggered();
+                spy.WaitFrame();
+                spy.AssertWasTriggered();
 
-                SimulateInput(i => i.GetKey(KeyCode.Space).Returns(false));
-                AssertEventWasStopped();
+                spy.SimulateInput(i => i.GetKey(KeyCode.Space).Returns(false));
+                spy.AssertWasStopped();
             }
 
             [Test]
@@ -102,32 +62,32 @@ namespace Tests {
                 InputTrigger combined = triggerA.And(triggerB);
 
                 Assert.That(combined.ToString(), Is.EqualTo("A+B"));
-                Prepare(combined);
+                InputTriggerSpy spy = new InputTriggerSpy(combined);
 
                 aTriggered = true;
                 bTriggered = false;
-                WaitFrame();
-                AssertNothingHappened();
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
 
                 aTriggered = false;
                 bTriggered = true;
-                WaitFrame();
-                AssertNothingHappened();
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
 
                 aTriggered = true;
                 bTriggered = true;
-                WaitFrame();
-                AssertEventWasTriggered();
+                spy.WaitFrame();
+                spy.AssertWasTriggered();
 
                 aTriggered = false;
                 bTriggered = true;
-                WaitFrame();
-                AssertEventWasStopped();
+                spy.WaitFrame();
+                spy.AssertWasStopped();
 
                 aTriggered = false;
                 bTriggered = false;
-                WaitFrame();
-                AssertNothingHappened();
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
             }
         }
     }

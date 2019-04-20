@@ -12,7 +12,7 @@ using UnityScriptLab.Input.Event;
 
 namespace Tests {
     namespace Event {
-        public class InputTriggerTests {
+        public class DerivedInputTriggerTests {
             bool triggered;
             bool stopped;
             InputSystem input;
@@ -58,74 +58,87 @@ namespace Tests {
             }
 
             [Test]
-            public void KeyPressedTest() {
-                Prepare(Key.Pressed(KeyCode.Space));
+            public void ValueOverTest() {
+                float returnedValue = 0;
+                InputValue value = new InputValue("value", _ => returnedValue);
+                Prepare(value.IsOver(2.0f));
 
-                SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(true));
-                AssertEventWasTriggered();
-
-                SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(false));
-                AssertEventWasStopped();
-            }
-
-            [Test]
-            public void KeyReleasedTest() {
-                Prepare(Key.Released(KeyCode.Space));
-
-                SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(true));
-                AssertEventWasTriggered();
-
-                SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(false));
-                AssertEventWasStopped();
-            }
-
-            [Test]
-            public void KeyHeldTest() {
-                Prepare(Key.Held(KeyCode.Space));
-
-                SimulateInput(i => i.GetKey(KeyCode.Space).Returns(true));
-                AssertEventWasTriggered();
-
-                WaitFrame();
-                AssertEventWasTriggered();
-
-                SimulateInput(i => i.GetKey(KeyCode.Space).Returns(false));
-                AssertEventWasStopped();
-            }
-
-            [Test]
-            public void AndTest() {
-                bool aTriggered = false;
-                bool bTriggered = false;
-                InputTrigger triggerA = new InputTrigger("A", _ => aTriggered);
-                InputTrigger triggerB = new InputTrigger("B", _ => bTriggered);
-                InputTrigger combined = triggerA.And(triggerB);
-
-                Assert.That(combined.ToString(), Is.EqualTo("A+B"));
-                Prepare(combined);
-
-                aTriggered = true;
-                bTriggered = false;
                 WaitFrame();
                 AssertNothingHappened();
 
-                aTriggered = false;
-                bTriggered = true;
-                WaitFrame();
-                AssertNothingHappened();
-
-                aTriggered = true;
-                bTriggered = true;
+                returnedValue = 2.5f;
                 WaitFrame();
                 AssertEventWasTriggered();
 
-                aTriggered = false;
-                bTriggered = true;
+                WaitFrame();
+                AssertEventWasTriggered();
+
+                returnedValue = 1.5f;
+                WaitFrame();
+                AssertEventWasStopped();
+            }
+
+            [Test]
+            public void ValueBelowTest() {
+                float returnedValue = 3.0f;
+                InputValue value = new InputValue("value", _ => returnedValue);
+                Prepare(value.IsBelow(2.0f));
+
+                WaitFrame();
+                AssertNothingHappened();
+
+                returnedValue = 1.5f;
+                WaitFrame();
+                AssertEventWasTriggered();
+
+                WaitFrame();
+                AssertEventWasTriggered();
+
+                returnedValue = 2.5f;
+                WaitFrame();
+                AssertEventWasStopped();
+            }
+
+            [Test]
+            public void ValueSurpassedTest() {
+                float returnedValue = 0;
+                InputValue value = new InputValue("value", _ => returnedValue);
+                value.HandleInput();
+                Prepare(value.Surpassed(2.0f));
+
+                WaitFrame();
+                AssertNothingHappened();
+
+                returnedValue = 2.5f;
+                WaitFrame();
+                AssertEventWasTriggered();
+
                 WaitFrame();
                 AssertEventWasStopped();
 
-                aTriggered = false;
-                bTriggered = false;
+                returnedValue = 1.5f;
+                WaitFrame();
+                AssertNothingHappened();
+            }
+
+            [Test]
+            public void ValueFellBelowTest() {
+                float returnedValue = 3.0f;
+                InputValue value = new InputValue("value", _ => returnedValue);
+                value.HandleInput();
+                Prepare(value.FellBelow(2.0f));
+
+                WaitFrame();
+                AssertNothingHappened();
+
+                returnedValue = 1.5f;
+                WaitFrame();
+                AssertEventWasTriggered();
+
+                WaitFrame();
+                AssertEventWasStopped();
+
+                returnedValue = 2.5f;
                 WaitFrame();
                 AssertNothingHappened();
             }

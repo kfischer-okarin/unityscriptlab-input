@@ -59,6 +59,14 @@ namespace UnityScriptLab {
                         return new InputValue($"{name}-WithoutSign", input => Mathf.Abs(getValue(input)));
                     }
                 }
+
+                public InputTrigger IsOver(float threshold) {
+                    return new InputTrigger($"{name}-IsOver-{threshold}", input => this.HasNewValue && this.NewValue > threshold);
+                }
+
+                public InputTrigger IsBelow(float threshold) {
+                    return new InputTrigger($"{name}-IsBelow-{threshold}", input => this.HasNewValue && this.NewValue < threshold);
+                }
             }
         }
     }

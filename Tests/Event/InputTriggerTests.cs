@@ -64,7 +64,7 @@ namespace Tests {
                 SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(true));
                 AssertEventWasTriggered();
 
-                WaitFrame();
+                SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(false));
                 AssertEventWasStopped();
             }
 
@@ -75,7 +75,7 @@ namespace Tests {
                 SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(true));
                 AssertEventWasTriggered();
 
-                WaitFrame();
+                SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(false));
                 AssertEventWasStopped();
             }
 
@@ -89,7 +89,7 @@ namespace Tests {
                 WaitFrame();
                 AssertNothingHappened();
 
-                SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(true));
+                SimulateInput(i => i.GetKey(KeyCode.Space).Returns(false));
                 AssertEventWasStopped();
             }
 

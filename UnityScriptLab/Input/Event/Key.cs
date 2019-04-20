@@ -23,8 +23,7 @@ namespace UnityScriptLab {
                 /// (Triggers every frame the key is held down.)
                 /// </summary>
                 public static InputTrigger Held(KeyCode key) => new InputTrigger($"KeyHeld-{key}",
-                    input => input.GetKey(key),
-                    input => input.GetKeyUp(key));
+                    input => input.GetKey(key));
             }
         }
     }

@@ -51,7 +51,7 @@ namespace UnityScriptLab {
 
                 /// <param name="name">Unique name of the event</param>
                 /// <param name="triggerCondition">Condition for the event triggering.</param>
-                public InputTrigger(string name, Func<InputSystem, bool> triggerCondition) : this(name, triggerCondition, input => true) { }
+                public InputTrigger(string name, Func<InputSystem, bool> triggerCondition) : this(name, triggerCondition, input => !triggerCondition(input)) { }
 
                 public override void HandleInput() {
                     if (!active && triggerCondition(this.Input)) {

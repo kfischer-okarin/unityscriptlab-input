@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -46,11 +46,15 @@ namespace UnityScriptLab {
                     this.getValue = getValue;
                 }
 
+                protected void BroadcastUpdate(float value) {
+                    updated?.Invoke(value);
+                }
+
                 public override void HandleInput() {
                     newValueUpdated = false;
                     if (HasNewValue) {
                         value = NewValue;
-                        updated?.Invoke(value);
+                        BroadcastUpdate(value);
                     }
                 }
 

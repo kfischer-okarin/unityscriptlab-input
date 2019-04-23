@@ -85,5 +85,13 @@ namespace Tests {
         Assert.That(updated, Is.False, "But was updated");
       }
     }
+
+    public class InputValueStub : InputValue {
+      public InputValueStub(string name = "Stub") : base(name, _ => 0) { }
+
+      public void Update(float value) {
+        BroadcastUpdate(value);
+      }
+    }
   }
 }

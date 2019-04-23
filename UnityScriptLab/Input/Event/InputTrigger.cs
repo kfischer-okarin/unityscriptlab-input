@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -38,8 +38,8 @@ namespace UnityScriptLab {
                 }
 
                 bool active;
-                Func<InputSystem, bool> triggerCondition;
-                Func<InputSystem, bool> stopCondition;
+                protected Func<InputSystem, bool> triggerCondition = _ => false;
+                protected Func<InputSystem, bool> stopCondition;
 
                 /// <param name="name">Unique name of the event</param>
                 /// <param name="triggerCondition">Condition for the event triggering.</param>
@@ -51,7 +51,11 @@ namespace UnityScriptLab {
 
                 /// <param name="name">Unique name of the event</param>
                 /// <param name="triggerCondition">Condition for the event triggering.</param>
-                public InputTrigger(string name, Func<InputSystem, bool> triggerCondition) : this(name, triggerCondition, input => !triggerCondition(input)) { }
+                public InputTrigger(string name, Func<InputSystem, bool> triggerCondition) : this(name, triggerCondition, i => !triggerCondition(i)) { }
+
+
+                /// <param name="name">Unique name of the event</param>
+                public InputTrigger(string name) : this(name, _ => false) { }
 
                 public override void HandleInput() {
                     if (active) {

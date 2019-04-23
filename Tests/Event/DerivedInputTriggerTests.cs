@@ -4,6 +4,8 @@ using NSubstitute;
 
 using NUnit.Framework;
 
+using Tests.Helper;
+
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -13,134 +15,91 @@ using UnityScriptLab.Input.Event;
 namespace Tests {
     namespace Event {
         public class DerivedInputTriggerTests {
-            bool triggered;
-            bool stopped;
-            InputSystem input;
-            InputTrigger ev;
-
             [SetUp]
             public void Reset() {
                 InputEvent.ResetBindings();
-                input = Substitute.For<InputSystem>();
-            }
-
-            void Prepare(InputTrigger eventToPrepare) {
-                ev = eventToPrepare;
-                ev.Triggered += () => triggered = true;
-                ev.Stopped += () => stopped = true;
-                ev.SetInputSystem(input);
-            }
-
-            void SimulateInput(Action<InputSystem> action) {
-                triggered = false;
-                stopped = false;
-                action?.Invoke(input);
-                ev.HandleInput();
-            }
-
-            void WaitFrame() {
-                SimulateInput(null);
-            }
-
-            void AssertEventWasTriggered() {
-                Assert.That(triggered, Is.True, "But wasn't triggered");
-                Assert.That(stopped, Is.False, "But was stopped");
-            }
-
-            void AssertEventWasStopped() {
-                Assert.That(triggered, Is.False, "But was triggered");
-                Assert.That(stopped, Is.True, "But wasn't stopped");
-            }
-
-            void AssertNothingHappened() {
-                Assert.That(triggered, Is.False, "But was triggered");
-                Assert.That(stopped, Is.False, "But was stopped");
             }
 
             [Test]
             public void ValueOverTest() {
-                float returnedValue = 0;
-                InputValue value = new InputValue("value", _ => returnedValue);
-                Prepare(value.IsOver(2.0f));
+                InputValueStub value = new InputValueStub();
+                InputTriggerSpy spy = new InputTriggerSpy(value.IsOver(2.0f));
 
-                WaitFrame();
-                AssertNothingHappened();
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
 
-                returnedValue = 2.5f;
-                WaitFrame();
-                AssertEventWasTriggered();
+                value.Update(2.5f);
+                spy.WaitFrame();
+                spy.AssertWasTriggered();
 
-                WaitFrame();
-                AssertEventWasTriggered();
+                spy.WaitFrame();
+                spy.AssertWasTriggered();
 
-                returnedValue = 1.5f;
-                WaitFrame();
-                AssertEventWasStopped();
+                value.Update(1.5f);
+                spy.WaitFrame();
+                spy.AssertWasStopped();
             }
 
             [Test]
             public void ValueBelowTest() {
-                float returnedValue = 3.0f;
-                InputValue value = new InputValue("value", _ => returnedValue);
-                Prepare(value.IsBelow(2.0f));
+                InputValueStub value = new InputValueStub();
+                InputTriggerSpy spy = new InputTriggerSpy(value.IsBelow(2.0f));
+                value.Update(3.0f);
 
-                WaitFrame();
-                AssertNothingHappened();
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
 
-                returnedValue = 1.5f;
-                WaitFrame();
-                AssertEventWasTriggered();
+                value.Update(1.5f);
+                spy.WaitFrame();
+                spy.AssertWasTriggered();
 
-                WaitFrame();
-                AssertEventWasTriggered();
+                spy.WaitFrame();
+                spy.AssertWasTriggered();
 
-                returnedValue = 2.5f;
-                WaitFrame();
-                AssertEventWasStopped();
+                value.Update(2.5f);
+                spy.WaitFrame();
+                spy.AssertWasStopped();
             }
 
             [Test]
             public void ValueSurpassedTest() {
-                float returnedValue = 0;
-                InputValue value = new InputValue("value", _ => returnedValue);
-                value.HandleInput();
-                Prepare(value.Surpassed(2.0f));
+                InputValueStub value = new InputValueStub();
+                InputTriggerSpy spy = new InputTriggerSpy(value.Surpassed(2.0f));
 
-                WaitFrame();
-                AssertNothingHappened();
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
 
-                returnedValue = 2.5f;
-                WaitFrame();
-                AssertEventWasTriggered();
+                value.Update(2.5f);
+                spy.WaitFrame();
+                spy.AssertWasTriggered();
 
-                WaitFrame();
-                AssertEventWasStopped();
+                spy.WaitFrame();
+                spy.AssertWasStopped();
 
-                returnedValue = 1.5f;
-                WaitFrame();
-                AssertNothingHappened();
+                value.Update(1.5f);
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
             }
 
             [Test]
             public void ValueFellBelowTest() {
-                float returnedValue = 3.0f;
-                InputValue value = new InputValue("value", _ => returnedValue);
-                value.HandleInput();
-                Prepare(value.FellBelow(2.0f));
+                InputValueStub value = new InputValueStub();
+                InputTriggerSpy spy = new InputTriggerSpy(value.FellBelow(2.0f));
+                value.Update(2.5f);
 
-                WaitFrame();
-                AssertNothingHappened();
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
 
-                returnedValue = 1.5f;
-                WaitFrame();
-                AssertEventWasTriggered();
+                value.Update(1.5f);
+                spy.WaitFrame();
+                spy.AssertWasTriggered();
 
-                WaitFrame();
-                AssertEventWasStopped();
+                spy.WaitFrame();
+                spy.AssertWasStopped();
 
-                returnedValue = 2.5f;
-                WaitFrame();
-                AssertNothingHappened();
+                value.Update(2.5f);
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
             }
         }
     }

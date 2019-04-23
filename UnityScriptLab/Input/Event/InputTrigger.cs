@@ -44,18 +44,20 @@ namespace UnityScriptLab {
                 /// <param name="name">Unique name of the event</param>
                 /// <param name="triggerCondition">Condition for the event triggering.</param>
                 /// <param name="stopCondition">Condition for the event stopping.</param>
-                public InputTrigger(string name, Func<InputSystem, bool> triggerCondition, Func<InputSystem, bool> stopCondition) : base(name) {
-                    this.triggerCondition = triggerCondition;
-                    this.stopCondition = stopCondition;
-                }
+                public InputTrigger(string name, Func<InputSystem, bool> triggerCondition, Func<InputSystem, bool> stopCondition):
+                    base(name) {
+                        this.triggerCondition = triggerCondition;
+                        this.stopCondition = stopCondition;
+                    }
 
                 /// <param name="name">Unique name of the event</param>
                 /// <param name="triggerCondition">Condition for the event triggering.</param>
-                public InputTrigger(string name, Func<InputSystem, bool> triggerCondition) : this(name, triggerCondition, i => !triggerCondition(i)) { }
-
+                public InputTrigger(string name, Func<InputSystem, bool> triggerCondition):
+                    this(name, triggerCondition, i => !triggerCondition(i)) { }
 
                 /// <param name="name">Unique name of the event</param>
-                public InputTrigger(string name) : this(name, _ => false) { }
+                public InputTrigger(string name) :
+                    this(name, _ => false) { }
 
                 public override void HandleInput() {
                     if (active) {

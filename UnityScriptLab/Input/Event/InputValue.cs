@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -64,36 +64,22 @@ namespace UnityScriptLab {
                     }
                 }
 
-                private Func<InputSystem, bool> ValueCondition(Func<float, bool> afterChange, Func<float, bool> beforeChange) {
-                    return _ => {
-                        if (!beforeChange(value)) {
-                            return false;
-                        }
-                        this.HandleInput();
-                        return afterChange(value);
-                    };
-                }
-
-                private Func<InputSystem, bool> ValueCondition(Func<float, bool> afterChange) {
-                    return ValueCondition(afterChange, _ => true);
-                }
-
                 public InputTrigger IsOver(float threshold) {
-                    return new InputTrigger($"{name}-IsOver-{threshold}", ValueCondition(value => value > threshold));
+                    return new InputValueTrigger($"{name}-IsOver-{threshold}", this, v => v > threshold);
                 }
 
                 public InputTrigger IsBelow(float threshold) {
-                    return new InputTrigger($"{name}-IsBelow-{threshold}", ValueCondition(value => value < threshold));
+                    return new InputValueTrigger($"{name}-IsBelow-{threshold}", this, v => v < threshold);
                 }
 
                 public InputTrigger Surpassed(float threshold) {
-                    return new InputTrigger($"{name}-Surpassed-{threshold}",
-                        ValueCondition(value => value > threshold, value => value <= threshold));
+                    return new InputValueTrigger($"{name}-Surpassed-{threshold}", this,
+                        value => value > threshold, valueBefore => valueBefore <= threshold);
                 }
 
                 public InputTrigger FellBelow(float threshold) {
-                    return new InputTrigger($"{name}-FellBelow-{threshold}",
-                        ValueCondition(value => value < threshold, value => value >= threshold));
+                    return new InputValueTrigger($"{name}-FellBelow-{threshold}", this,
+                        value => value < threshold, valueBefore => valueBefore >= threshold);
                 }
             }
         }

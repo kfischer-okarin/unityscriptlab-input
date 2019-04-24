@@ -87,10 +87,22 @@ namespace Tests {
     }
 
     public class InputValueStub : InputValue {
-      public InputValueStub(string name = "Stub") : base(name, _ => 0) { }
+      public InputValueStub(string name = "Stub") : base(name) { }
 
       public void Update(float value) {
         BroadcastUpdate(value);
+      }
+    }
+
+    public class InputTriggerStub : InputTrigger {
+      public InputTriggerStub(string name = "Stub") : base(name) { }
+
+      public void Activate() {
+        Trigger();
+      }
+
+      public void Deactivate() {
+        Stop();
       }
     }
   }

@@ -59,17 +59,25 @@ namespace UnityScriptLab {
                 public InputTrigger(string name) :
                     this(name, _ => false) { }
 
+                protected void Trigger() {
+                    triggered?.Invoke();
+                }
+
+                protected void Stop() {
+                    stopped?.Invoke();
+                }
+
                 public override void HandleInput() {
                     if (active) {
                         if (stopCondition(this.Input)) {
                             active = false;
-                            stopped?.Invoke();
+                            Stop();
                             return;
                         }
-                        triggered?.Invoke();
+                        Trigger();
                     } else if (triggerCondition(this.Input)) {
                         active = true;
-                        triggered?.Invoke();
+                        Trigger();
                     }
                 }
 
@@ -77,9 +85,13 @@ namespace UnityScriptLab {
                 /// Returns a combined trigger occurring when both of the events are triggering at the same time.
                 /// </summary>
                 public InputTrigger And(InputTrigger other) {
-                    return new InputTrigger($"{this.name}+{other.name}",
-                        input => this.triggerCondition(input) && other.triggerCondition(input),
-                        input => this.stopCondition(input) || other.stopCondition(input));
+                    return new InputTrigger($"{name}+{other.name}",
+                        input => triggerCondition(input) && other.triggerCondition(input),
+                        input => stopCondition(input) || other.stopCondition(input));
+                }
+
+                public InputValue AsValue(float value = 1) {
+                    return new InputTriggerValue($"{name}-AsValue", this, value);
                 }
             }
         }

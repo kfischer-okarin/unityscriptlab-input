@@ -43,6 +43,52 @@ namespace Tests {
                 spy.WaitFrame();
                 spy.AssertWasUpdatedTo(2.0f);
             }
+
+            [Test]
+            public void OperatorPlusTest() {
+                float valueA = 0;
+                float valueB = 0;
+                InputValue a = new InputValue("a", _ => valueA);
+                InputValue b = new InputValue("b", _ => valueB);
+                InputValueSpy spy = new InputValueSpy(a + b);
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
+
+                valueA = 3;
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(3);
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
+
+                valueB = 2;
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(5);
+            }
+
+            [Test]
+            public void OperatorMinusTest() {
+                float valueA = 0;
+                float valueB = 0;
+                InputValue a = new InputValue("a", _ => valueA);
+                InputValue b = new InputValue("b", _ => valueB);
+                InputValueSpy spy = new InputValueSpy(a - b);
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
+
+                valueA = 3;
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(3);
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
+
+                valueB = 2;
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(1);
+            }
         }
     }
 }

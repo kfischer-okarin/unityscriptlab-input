@@ -98,6 +98,14 @@ namespace UnityScriptLab {
                     return new InputValueTrigger($"{name}-FellBelow-{threshold}", this,
                         value => value < threshold, valueBefore => valueBefore >= threshold);
                 }
+
+                public static InputValue operator +(InputValue x, InputValue y) {
+                    return new InputValue($"{x}-plus-{y}", i => x.getValue(i) + y.getValue(i));
+                }
+
+                public static InputValue operator -(InputValue x, InputValue y) {
+                    return new InputValue($"{x}-minus-{y}", i => x.getValue(i) - y.getValue(i));
+                }
             }
         }
     }

@@ -9,35 +9,17 @@ namespace UnityScriptLab {
             /// <summary>
             /// Value emitted by the input system, to which handlers can be subscribed.
             /// </summary>
-            public class InputValue : InputEvent {
-                event Action<float> updated;
-
-                /// <summary>
-                /// Triggered every frame the value changed.
-                /// </summary>
-                public event Action<float> Updated {
-                    add {
-                        Bind<InputValue>(ev => ev.updated += value);
-                    }
-                    remove {
-                        Unbind<InputValue>(ev => ev.updated -= value);
-                    }
-                }
-
-                float value = 0.0f;
-                float newValue = 0.0f;
-                bool newValueUpdated = false;
-                float NewValue {
-                    get {
-                        if (!newValueUpdated) {
-                            newValue = getValue(this.Input);
-                        }
-                        return newValue;
-                    }
-                }
-                bool HasNewValue { get { return !Mathf.Approximately(value, NewValue); } }
+            public class InputValue : Value<float> {
 
                 protected Func<InputSystem, float> getValue;
+
+                public override float GetValue(InputSystem input) {
+                    return getValue(input);
+                }
+
+                public override bool ShouldBroadcast(float value, float lastValue) {
+                    return !Mathf.Approximately(value, lastValue);
+                }
 
                 /// <param name="name">Unique name of the event</param>
                 /// <param name="triggerCondition">Condition for the event triggering.</param>
@@ -48,17 +30,6 @@ namespace UnityScriptLab {
 
                 public InputValue(string name) : this(name, _ => 0) { }
 
-                protected void BroadcastUpdate(float value) {
-                    updated?.Invoke(value);
-                }
-
-                public override void HandleInput() {
-                    newValueUpdated = false;
-                    if (HasNewValue) {
-                        value = NewValue;
-                        BroadcastUpdate(value);
-                    }
-                }
 
                 /// <summary>
                 /// InputValue that returns the absolute value of this InputValue.

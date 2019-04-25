@@ -90,7 +90,7 @@ namespace Tests {
       public InputValueStub(string name = "Stub") : base(name) { }
 
       public void Update(float value) {
-        BroadcastUpdate(value);
+        Broadcast(value);
       }
     }
 

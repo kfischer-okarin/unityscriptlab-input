@@ -22,20 +22,20 @@ namespace Tests {
 
             [Test]
             public void TriggerAsValueTest() {
-                InputTriggerStub trigger = new InputTriggerStub();
-                InputValueSpy spy = new InputValueSpy(trigger.AsValue());
+                TriggerStub trigger = new TriggerStub();
+                ValueSpy<float> spy = new ValueSpy<float>(trigger.AsValue());
 
                 spy.WaitFrame();
                 spy.AssertNothingHappened();
 
-                trigger.Activate();
+                trigger.Update(true);
                 spy.WaitFrame();
                 spy.AssertWasUpdatedTo(1);
 
                 spy.WaitFrame();
                 spy.AssertNothingHappened();
 
-                trigger.Deactivate();
+                trigger.Update(false);
                 spy.WaitFrame();
                 spy.AssertWasUpdatedTo(0);
             }

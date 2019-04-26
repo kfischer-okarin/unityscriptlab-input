@@ -25,6 +25,10 @@ namespace UnityScriptLab {
         public Trigger And(Trigger other) {
           return new AndTrigger($"{name}+{other.name}", this, other);
         }
+
+        public Value<float> AsValue(float value = 1) {
+          return new Adapter<bool, float>($"{name}-AsValue", this, active => active ? value : 0);
+        }
       }
 
       public class AndTrigger : Trigger {

@@ -137,17 +137,5 @@ namespace Tests {
         Broadcast(value);
       }
     }
-
-    public class InputTriggerStub : InputTrigger {
-      public InputTriggerStub(string name = "Stub") : base(name) { }
-
-      public void Activate() {
-        Trigger();
-      }
-
-      public void Deactivate() {
-        Stop();
-      }
-    }
   }
 }

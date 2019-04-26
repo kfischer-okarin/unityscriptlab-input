@@ -57,7 +57,7 @@ namespace UnityScriptLab {
                 /// <param name="value">Current value</param>
                 /// <param name="lastValue">Value of the last frame</param>
                 /// <returns></returns>
-                public virtual bool ShouldBroadcast(T value, T lastValue) => true;
+                public virtual bool ShouldBroadcast(T value, T lastValue) => !value.Equals(lastValue);
 
                 public override void HandleInput() {
                     newValueUpdated = false;

@@ -89,10 +89,6 @@ namespace UnityScriptLab {
                         input => triggerCondition(input) && other.triggerCondition(input),
                         input => stopCondition(input) || other.stopCondition(input));
                 }
-
-                public InputValue AsValue(float value = 1) {
-                    return new InputTriggerValue($"{name}-AsValue", this, value);
-                }
             }
         }
     }

@@ -19,38 +19,38 @@ namespace Tests {
 
             [Test]
             public void KeyPressedTest() {
-                InputTriggerSpy spy = new InputTriggerSpy(Key.Pressed(KeyCode.Space));
+                ValueSpy<bool> spy = new ValueSpy<bool>(Key.Pressed(KeyCode.Space));
 
                 spy.SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(true));
-                spy.AssertWasTriggered();
+                spy.AssertWasUpdatedTo(true);
 
                 spy.SimulateInput(i => i.GetKeyDown(KeyCode.Space).Returns(false));
-                spy.AssertWasStopped();
+                spy.AssertWasUpdatedTo(false);
             }
 
             [Test]
             public void KeyReleasedTest() {
-                InputTriggerSpy spy = new InputTriggerSpy(Key.Released(KeyCode.Space));
+                ValueSpy<bool> spy = new ValueSpy<bool>(Key.Released(KeyCode.Space));
 
                 spy.SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(true));
-                spy.AssertWasTriggered();
+                spy.AssertWasUpdatedTo(true);
 
                 spy.SimulateInput(i => i.GetKeyUp(KeyCode.Space).Returns(false));
-                spy.AssertWasStopped();
+                spy.AssertWasUpdatedTo(false);
             }
 
             [Test]
             public void KeyHeldTest() {
-                InputTriggerSpy spy = new InputTriggerSpy(Key.Held(KeyCode.Space));
+                ValueSpy<bool> spy = new ValueSpy<bool>(Key.Held(KeyCode.Space));
 
                 spy.SimulateInput(i => i.GetKey(KeyCode.Space).Returns(true));
-                spy.AssertWasTriggered();
+                spy.AssertWasUpdatedTo(true);
 
                 spy.WaitFrame();
-                spy.AssertWasTriggered();
+                spy.AssertWasUpdatedTo(true);
 
                 spy.SimulateInput(i => i.GetKey(KeyCode.Space).Returns(false));
-                spy.AssertWasStopped();
+                spy.AssertWasUpdatedTo(false);
             }
 
             [Test]

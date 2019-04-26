@@ -18,10 +18,6 @@ namespace UnityScriptLab {
           return getValue(input);
         }
 
-        public override bool ShouldBroadcast(bool value, bool lastValue) {
-          return value || lastValue;
-        }
-
         public Trigger And(Trigger other) {
           return new AndTrigger($"{name}+{other.name}", this, other);
         }

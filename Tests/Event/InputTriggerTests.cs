@@ -47,7 +47,7 @@ namespace Tests {
                 spy.AssertWasUpdatedTo(true);
 
                 spy.WaitFrame();
-                spy.AssertWasUpdatedTo(true);
+                spy.AssertNothingHappened();
 
                 spy.SimulateInput(i => i.GetKey(KeyCode.Space).Returns(false));
                 spy.AssertWasUpdatedTo(false);

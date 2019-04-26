@@ -122,6 +122,14 @@ namespace Tests {
       }
     }
 
+    public class TriggerStub : Trigger {
+      public TriggerStub(string name = "Stub") : base(name) { }
+
+      public void Update(bool value) {
+        Broadcast(value);
+      }
+    }
+
     public class InputValueStub : InputValue {
       public InputValueStub(string name = "Stub") : base(name) { }
 

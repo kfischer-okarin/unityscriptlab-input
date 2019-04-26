@@ -55,37 +55,31 @@ namespace Tests {
 
             [Test]
             public void AndTest() {
-                bool aTriggered = false;
-                bool bTriggered = false;
-                InputTrigger triggerA = new InputTrigger("A", _ => aTriggered);
-                InputTrigger triggerB = new InputTrigger("B", _ => bTriggered);
-                InputTrigger combined = triggerA.And(triggerB);
+                TriggerStub triggerA = new TriggerStub("A");
+                TriggerStub triggerB = new TriggerStub("B");
+                Trigger combined = triggerA.And(triggerB);
 
                 Assert.That(combined.ToString(), Is.EqualTo("A+B"));
-                InputTriggerSpy spy = new InputTriggerSpy(combined);
+                ValueSpy<bool> spy = new ValueSpy<bool>(combined);
 
-                aTriggered = true;
-                bTriggered = false;
+                triggerA.Update(true);
                 spy.WaitFrame();
                 spy.AssertNothingHappened();
 
-                aTriggered = false;
-                bTriggered = true;
+                triggerA.Update(false);
+                triggerB.Update(true);
                 spy.WaitFrame();
                 spy.AssertNothingHappened();
 
-                aTriggered = true;
-                bTriggered = true;
+                triggerA.Update(true);
                 spy.WaitFrame();
-                spy.AssertWasTriggered();
+                spy.AssertWasUpdatedTo(true);
 
-                aTriggered = false;
-                bTriggered = true;
+                triggerA.Update(false);
                 spy.WaitFrame();
-                spy.AssertWasStopped();
+                spy.AssertWasUpdatedTo(false);
 
-                aTriggered = false;
-                bTriggered = false;
+                triggerB.Update(false);
                 spy.WaitFrame();
                 spy.AssertNothingHappened();
             }

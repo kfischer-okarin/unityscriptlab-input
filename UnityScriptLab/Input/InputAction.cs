@@ -4,31 +4,37 @@ using System.Collections.Generic;
 namespace UnityScriptLab.Input {
   using Value;
 
-  public class InputAction {
-    static Dictionary<string, InputAction> actions = new Dictionary<string, InputAction>();
-
-    public static InputAction Get(string name) {
-      if (!actions.ContainsKey(name)) {
-        actions[name] = new InputAction(name);
+  public class InputAction<T> : InputEvent {
+    event Action<T, InputValue<T>> triggered;
+    public event Action<T, InputValue<T>> Triggered {
+      add {
+        Bind<InputAction<T>>(v => v.triggered += value);
       }
-      return actions[name];
+      remove {
+        Unbind<InputAction<T>>(v => v.triggered -= value);
+      }
     }
 
-    public event Action<InputEvent> Triggered;
+    bool wasTriggered;
+    T triggeredValue;
+    InputValue<T> triggerSource;
 
-    string name;
+    public InputAction(string name) : base(name) { }
 
-    List<InputEvent> bindings;
-
-    private InputAction(string name) {
-      this.name = name;
-      this.bindings = new List<InputEvent>();
+    public override void HandleInput() {
+      if (wasTriggered) {
+        triggered?.Invoke(triggeredValue, triggerSource);
+        wasTriggered = false;
+      }
     }
 
-    public void Bind(TriggerInput control) {
-      bindings.Add(control);
-      control.Updated += value => {
-        if (value) Triggered?.Invoke(control);
+    public void Bind(InputValue<T> input) {
+      input.Updated += value => {
+        if (!wasTriggered) {
+          triggeredValue = value;
+          triggerSource = input;
+          wasTriggered = true;
+        }
       };
     }
   }

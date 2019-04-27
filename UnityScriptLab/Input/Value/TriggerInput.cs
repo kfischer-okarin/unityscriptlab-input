@@ -13,5 +13,15 @@ namespace UnityScriptLab.Input.Value {
     public TriggerInput And(TriggerInput other) {
       return new TriggerInput($"{name}+{other.name}", new Combinator<bool, bool, bool>(this, other, (v1, v2) => v1 && v2));
     }
+
+    public ScalarInput AsScalar {
+      get { return new ScalarInput($"{name}-AsScalar", new TriggerAsScalar(this)); }
+    }
+
+    class TriggerAsScalar : Adapter<bool, float> {
+      public TriggerAsScalar(TriggerInput trigger) : base(trigger, Calculate) { }
+
+      private static float Calculate(bool active) => active ? 1 : 0;
+    }
   }
 }

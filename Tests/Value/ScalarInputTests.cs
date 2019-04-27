@@ -37,26 +37,6 @@ namespace Tests.Value {
     }
 
     [Test]
-    public void ScalarFromTriggerTest() {
-      TriggerStub trigger = new TriggerStub();
-      ValueSpy<float> spy = new ValueSpy<float>(new ScalarInput("something", trigger));
-
-      spy.WaitFrame();
-      spy.AssertNothingHappened();
-
-      trigger.Update(true);
-      spy.WaitFrame();
-      spy.AssertWasUpdatedTo(1);
-
-      spy.WaitFrame();
-      spy.AssertNothingHappened();
-
-      trigger.Update(false);
-      spy.WaitFrame();
-      spy.AssertWasUpdatedTo(0);
-    }
-
-    [Test]
     public void AxisScalarFromTriggerTest() {
       TriggerStub positive = new TriggerStub("positive");
       TriggerStub negative = new TriggerStub("negative");

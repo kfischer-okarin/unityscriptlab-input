@@ -17,10 +17,10 @@ namespace Tests.Value {
     }
 
     [Test]
-    public void VectorFromScalarsTest() {
+    public void CombineScalarsToVectorTest() {
       ScalarStub x = new ScalarStub("x");
       ScalarStub y = new ScalarStub("y");
-      ValueSpy<Vector2> spy = new ValueSpy<Vector2>(new Vector2Input("something", x, y));
+      ValueSpy<Vector2> spy = new ValueSpy<Vector2>(Combine.ScalarsToVector(x, y));
 
       spy.WaitFrame();
       spy.AssertNothingHappened();

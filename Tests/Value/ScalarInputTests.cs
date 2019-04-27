@@ -37,10 +37,10 @@ namespace Tests.Value {
     }
 
     [Test]
-    public void AxisScalarFromTriggerTest() {
+    public void CombineTriggersToAxisTest() {
       TriggerStub positive = new TriggerStub("positive");
       TriggerStub negative = new TriggerStub("negative");
-      ValueSpy<float> spy = new ValueSpy<float>(new ScalarInput("axis", positive, negative));
+      ValueSpy<float> spy = new ValueSpy<float>(Combine.TriggersToAxis(positive, negative));
 
       spy.WaitFrame();
       spy.AssertNothingHappened();

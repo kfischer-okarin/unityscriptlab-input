@@ -8,8 +8,6 @@ namespace UnityScriptLab.Input.Value {
   public class ScalarInput : InputValue<float> {
     public ScalarInput(string name, ValueProvider<float> provider) : base(name, provider) { }
 
-    public ScalarInput(string name, TriggerInput positive, TriggerInput negative) : this(name, new TriggerAsAxis(positive, negative)) { }
-
     public ScalarInput(string name, Func<InputSystem, float> getValue) : base(name, getValue) { }
 
     public ScalarInput(string name) : this(name, _ => 0) { }
@@ -51,12 +49,6 @@ namespace UnityScriptLab.Input.Value {
 
     public static ScalarInput operator -(ScalarInput x, ScalarInput y) {
       return new ScalarInput($"{x}-plus-{y}", new Combinator<float, float, float>(x, y, (v1, v2) => v1 - v2));
-    }
-
-    class TriggerAsAxis : Combinator<bool, bool, float> {
-      public TriggerAsAxis(TriggerInput positive, TriggerInput negative) : base(positive, negative, Calculate) { }
-
-      private static float Calculate(bool positive, bool negative) => (positive ? 1 : 0) + (negative ? -1 : 0);
     }
   }
 }

@@ -8,7 +8,9 @@ namespace UnityScriptLab.Input.Value {
   public class ScalarInput : InputValue<float> {
     public ScalarInput(string name, ValueProvider<float> provider) : base(name, provider) { }
 
-    public ScalarInput(string name, TriggerInput trigger, float value = 1) : this(name, new TriggerAsScalar(trigger, value)) { }
+    public ScalarInput(string name, TriggerInput trigger) : this(name, new TriggerAsScalar(trigger)) { }
+
+    public ScalarInput(string name, TriggerInput positive, TriggerInput negative) : this(name, new TriggerAsAxis(positive, negative)) { }
 
     public ScalarInput(string name, Func<InputSystem, float> getValue) : base(name, getValue) { }
 
@@ -54,7 +56,15 @@ namespace UnityScriptLab.Input.Value {
     }
 
     class TriggerAsScalar : Adapter<bool, float> {
-      public TriggerAsScalar(TriggerInput trigger, float value) : base(trigger, active => active ? value : 0) { }
+      public TriggerAsScalar(TriggerInput trigger) : base(trigger, Calculate) { }
+
+      private static float Calculate(bool active) => active ? 1 : 0;
+    }
+
+    class TriggerAsAxis : Combinator<bool, bool, float> {
+      public TriggerAsAxis(TriggerInput positive, TriggerInput negative) : base(positive, negative, Calculate) { }
+
+      private static float Calculate(bool positive, bool negative) => (positive ? 1 : 0) + (negative ? -1 : 0);
     }
   }
 }

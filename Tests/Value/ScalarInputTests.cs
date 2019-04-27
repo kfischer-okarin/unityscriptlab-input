@@ -58,6 +58,31 @@ namespace Tests {
             }
 
             [Test]
+            public void AxisScalarFromTriggerTest() {
+                TriggerStub positive = new TriggerStub("positive");
+                TriggerStub negative = new TriggerStub("negative");
+                ValueSpy<float> spy = new ValueSpy<float>(new ScalarInput("axis", positive, negative));
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
+
+                positive.Update(true);
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(1);
+
+                negative.Update(true);
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(0);
+
+                positive.Update(false);
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(-1);
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
+            }
+
+            [Test]
             public void WithoutSignTest() {
                 ScalarStub original = new ScalarStub("value");
                 ValueSpy<float> spy = new ValueSpy<float>(original.WithoutSign);

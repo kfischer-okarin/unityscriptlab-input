@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using UnityEngine;
-
 namespace UnityScriptLab {
     namespace Input {
+        using Value;
+
         /// <summary>
         /// Input Action.
         /// </summary>
@@ -19,18 +19,18 @@ namespace UnityScriptLab {
                 return actions[name];
             }
 
-            public event Action<Event.InputEvent> Triggered;
+            public event Action<InputEvent> Triggered;
 
             string name;
 
-            List<Event.InputEvent> bindings;
+            List<InputEvent> bindings;
 
             private InputAction(string name) {
                 this.name = name;
-                this.bindings = new List<Event.InputEvent>();
+                this.bindings = new List<InputEvent>();
             }
 
-            public void Bind(Event.TriggerInput control) {
+            public void Bind(TriggerInput control) {
                 bindings.Add(control);
                 control.Updated += value => {
                     if (value) Triggered?.Invoke(control);

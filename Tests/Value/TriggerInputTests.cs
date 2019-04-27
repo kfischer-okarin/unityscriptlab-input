@@ -83,27 +83,6 @@ namespace Tests {
                 spy.WaitFrame();
                 spy.AssertNothingHappened();
             }
-
-            [Test]
-            public void TriggerAsScalarTest() {
-                TriggerStub trigger = new TriggerStub();
-                ValueSpy<float> spy = new ValueSpy<float>(trigger.AsScalar());
-
-                spy.WaitFrame();
-                spy.AssertNothingHappened();
-
-                trigger.Update(true);
-                spy.WaitFrame();
-                spy.AssertWasUpdatedTo(1);
-
-                spy.WaitFrame();
-                spy.AssertNothingHappened();
-
-                trigger.Update(false);
-                spy.WaitFrame();
-                spy.AssertWasUpdatedTo(0);
-            }
-
         }
     }
 }

@@ -1,28 +1,9 @@
-using System;
+namespace UnityScriptLab.Input {
+  using Value;
 
-using UnityEngine;
+  public static class ValueOf {
+    public static ScalarInput Axis(string name) => new ScalarInput($"Axis-{name}", input => input.GetAxis(name));
 
-namespace UnityScriptLab {
-    namespace Input {
-        using Value;
-
-        public static class ValueOf {
-            /// <summary>
-            /// InputValue: Axis.
-            /// </summary>
-            public static ScalarInput Axis(string name) => new ScalarInput($"Axis-{name}",
-                input => input.GetAxis(name));
-
-            /// <summary>
-            /// InputValue: Raw Axis.
-            /// </summary>
-            public static ScalarInput RawAxis(string name) => new ScalarInput($"RawAxis-{name}",
-                input => input.GetAxisRaw(name));
-
-            // public static InputValue TwoTriggerAxis(InputTrigger positive, InputTrigger negative) {
-
-            // }
-
-        }
-    }
+    public static ScalarInput RawAxis(string name) => new ScalarInput($"RawAxis-{name}", input => input.GetAxisRaw(name));
+  }
 }

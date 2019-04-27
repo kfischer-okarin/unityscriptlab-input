@@ -19,21 +19,22 @@ namespace Tests {
             public void BoundEventListTest() {
                 InputEvent.ResetBindings();
 
-                InputTrigger ev1 = new InputTrigger("test", default);
-                InputTrigger ev2 = new InputTrigger("test2", default);
-                Action action = () => { };
-                Action secondAction = () => { };
+                TriggerInput t = new TriggerInput("t");
+                ScalarInput v = new ScalarInput("v");
+                Action<bool> boolAction = _ => { };
+                Action<bool> boolAction2 = _ => { };
+                Action<float> floatAction = _ => { };
 
-                ev1.Triggered += action;
-                ev1.Stopped += secondAction;
-                ev2.Stopped += action;
-                Assert.That(InputEvent.BoundEvents, ContainsExactly(ev1, ev2));
+                t.Updated += boolAction;
+                t.Updated += boolAction2;
+                v.Updated += floatAction;
+                Assert.That(InputEvent.BoundEvents, ContainsExactly(t, v));
 
-                ev1.Triggered -= action;
-                Assert.That(InputEvent.BoundEvents, ContainsExactly(ev1, ev2));
+                t.Updated -= boolAction;
+                Assert.That(InputEvent.BoundEvents, ContainsExactly(t, v));
 
-                ev1.Stopped -= secondAction;
-                Assert.That(InputEvent.BoundEvents, ContainsExactly(ev2));
+                t.Updated -= boolAction2;
+                Assert.That(InputEvent.BoundEvents, ContainsExactly(v));
 
                 InputEvent.ResetBindings();
                 Assert.That(InputEvent.BoundEvents, Is.Empty);

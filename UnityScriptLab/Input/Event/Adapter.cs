@@ -3,15 +3,12 @@ using System;
 namespace UnityScriptLab {
   namespace Input {
     namespace Event {
-      /// <summary>
-      /// Value emitted by the input system, to which handlers can be subscribed.
-      /// </summary>
-      public class Adapter<In, Out> : Value<Out> {
+      public class Adapter<In, Out> : ValueProvider<Out> {
         In currentValue;
         Func<In, Out> convert;
 
         /// <param name="name">Unique name of the event</param>
-        public Adapter(string name, Value<In> input, Func<In, Out> convert) : base(name) {
+        public Adapter(InputValue<In> input, Func<In, Out> convert) {
           input.Updated += v => currentValue = v;
           this.convert = convert;
         }
@@ -19,7 +16,7 @@ namespace UnityScriptLab {
         /// <summary>
         /// Get the current value of the input.
         /// </summary>
-        public override Out GetValue(InputSystem input) {
+        public Out GetValue(InputSystem input) {
           return convert(currentValue);
         }
       }

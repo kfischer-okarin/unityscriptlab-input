@@ -9,14 +9,18 @@ namespace UnityScriptLab {
                 /// <summary>
                 /// InputValue: Axis.
                 /// </summary>
-                public static InputValue Axis(string name) => new InputValue($"Axis-{name}",
+                public static ScalarInput Axis(string name) => new ScalarInput($"Axis-{name}",
                     input => input.GetAxis(name));
 
                 /// <summary>
                 /// InputValue: Raw Axis.
                 /// </summary>
-                public static InputValue RawAxis(string name) => new InputValue($"RawAxis-{name}",
+                public static ScalarInput RawAxis(string name) => new ScalarInput($"RawAxis-{name}",
                     input => input.GetAxisRaw(name));
+
+                // public static InputValue TwoTriggerAxis(InputTrigger positive, InputTrigger negative) {
+
+                // }
 
             }
         }

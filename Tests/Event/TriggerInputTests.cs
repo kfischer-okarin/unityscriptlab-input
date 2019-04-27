@@ -11,7 +11,7 @@ using UnityScriptLab.Input.Event;
 
 namespace Tests {
     namespace Event {
-        public class InputTriggerTests {
+        public class TriggerInputTests {
             [SetUp]
             public void Reset() {
                 InputEvent.ResetBindings();
@@ -57,7 +57,7 @@ namespace Tests {
             public void AndTest() {
                 TriggerStub triggerA = new TriggerStub("A");
                 TriggerStub triggerB = new TriggerStub("B");
-                Trigger combined = triggerA.And(triggerB);
+                TriggerInput combined = triggerA.And(triggerB);
 
                 Assert.That(combined.ToString(), Is.EqualTo("A+B"));
                 ValueSpy<bool> spy = new ValueSpy<bool>(combined);
@@ -83,6 +83,27 @@ namespace Tests {
                 spy.WaitFrame();
                 spy.AssertNothingHappened();
             }
+
+            [Test]
+            public void TriggerAsScalarTest() {
+                TriggerStub trigger = new TriggerStub();
+                ValueSpy<float> spy = new ValueSpy<float>(trigger.AsScalar());
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
+
+                trigger.Update(true);
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(1);
+
+                spy.WaitFrame();
+                spy.AssertNothingHappened();
+
+                trigger.Update(false);
+                spy.WaitFrame();
+                spy.AssertWasUpdatedTo(0);
+            }
+
         }
     }
 }

@@ -1,5 +1,5 @@
 {
-    "name": "Tests",
+    "name": "UnityScriptLabInputTests",
     "references": [
         "UnityScriptLabInput"
     ],
@@ -16,5 +16,6 @@
         "NSubstitute.dll"
     ],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": []
 }
